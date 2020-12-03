@@ -43,7 +43,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         result = {
             'email': user.email,
-            'tokens': user.tokens()
+            'tokens': user.tokens(),
         }
 
         return result
