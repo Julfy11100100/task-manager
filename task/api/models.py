@@ -10,7 +10,7 @@ class Task(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=120, blank=False)
     text = models.TextField()
-    is_complite = models.BooleanField(default=False)
+    is_complete = models.BooleanField(default=False)
     date = models.DateField(null=False, blank=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 

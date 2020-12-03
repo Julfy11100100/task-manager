@@ -9,7 +9,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Task manager",
         default_version="v1",
-        description="My own task namager",
+        description="My own task manager",
         license=openapi.License(name="Test License"),
     ),
     public=True,

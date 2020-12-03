@@ -1,31 +1,81 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from .serializers import TasksSerializer
-from rest_framework import permissions
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+from rest_framework import permissions, status
+from .serializers import ReadOnlyTasksSerializer, WriteOnlyTasksSerializer
 from .models import Task
-from .permissions import IsUser
 
 
-class TasksList(ListCreateAPIView):
+class GetAllTasksView(GenericAPIView):
 
-    serializer_class = TasksSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ReadOnlyTasksSerializer
     queryset = Task.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
+    def get(self, request):
+        email = request.user
+        tasks = self.get_queryset().filter(user__email=email)
+        serializer = self.serializer_class(tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
 
+class CreateTaskView(GenericAPIView):
 
-class TasksDetailList(RetrieveUpdateDestroyAPIView):
-    serializer_class = TasksSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = WriteOnlyTasksSerializer
     queryset = Task.objects.all()
-    permission_classes = (permissions.IsAuthenticated, IsUser, )
-    lookup_field = "id"
 
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+
+class GetTaskByIdView(GenericAPIView):
+
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ReadOnlyTasksSerializer
+    queryset = Task.objects.all()
+
+    def get(self, request, pk):
+        try:
+            email = request.user
+            task = self.get_queryset().get(user__email=email, id=pk)
+            serializer = self.serializer_class(task)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Task.DoesNotExist:
+            return Response({"Id does not exists"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SetTaskAsCompleteView(GenericAPIView):
+
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ReadOnlyTasksSerializer
+    queryset = Task.objects.all()
+
+    def get(self, request, pk):
+        try:
+            email = request.user
+            task = self.get_queryset().get(user__email=email, id=pk)
+            task.is_complete = True
+            task.save()
+            serializer = self.serializer_class(task)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Task.DoesNotExist:
+            return Response({"Id does not exists"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class DeleteTaskView(GenericAPIView):
+
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = WriteOnlyTasksSerializer
+    queryset = Task.objects.all()
+
+    def delete(self, request, pk):
+        try:
+            email = request.user
+            task = self.get_queryset().get(user__email=email, id=pk)
+            task.delete()
+            return Response({"Task was successfully deleted"}, status=status.HTTP_200_OK)
+        except Task.DoesNotExist:
+            return Response({"Id does not exists"}, status=status.HTTP_404_NOT_FOUND)
