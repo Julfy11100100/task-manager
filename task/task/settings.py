@@ -41,12 +41,31 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'authentication',
+    'api',
 ]
 
 AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
-    'NON_FIELD_ERRORS_KEY': 'error'
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Token',),
 }
 
 MIDDLEWARE = [
