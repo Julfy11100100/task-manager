@@ -5,7 +5,9 @@ from rest_framework.permissions import AllowAny
 
 
 class RegisterView(generics.GenericAPIView):
-
+    """
+    Register Api
+    """
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny, )
 
@@ -19,7 +21,9 @@ class RegisterView(generics.GenericAPIView):
 
 
 class LoginView(generics.GenericAPIView):
-
+    """
+    Login Api
+    """
     serializer_class = LoginSerializer
     permission_classes = (AllowAny, )
 

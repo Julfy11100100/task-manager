@@ -5,7 +5,9 @@ from rest_framework.exceptions import AuthenticationFailed
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for register
+    """
     password = serializers.CharField(max_length=70, min_length=6, write_only=True)
     email = serializers.EmailField(max_length=70, write_only=True)
 
@@ -24,7 +26,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for login
+    """
     password = serializers.CharField(max_length=70, min_length=6, write_only=True)
     email = serializers.EmailField(max_length=70)
     tokens = serializers.CharField(read_only=True)

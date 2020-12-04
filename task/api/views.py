@@ -6,7 +6,9 @@ from .models import Task
 
 
 class GetAllTasksView(GenericAPIView):
-
+    """
+    Get All Tasks of authenticated user
+    """
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ReadOnlyTasksSerializer
     queryset = Task.objects.all()
@@ -19,7 +21,9 @@ class GetAllTasksView(GenericAPIView):
 
 
 class CreateTaskView(GenericAPIView):
-
+    """
+    Create new task for authenticated user
+    """
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = WriteOnlyTasksSerializer
     queryset = Task.objects.all()
@@ -32,7 +36,9 @@ class CreateTaskView(GenericAPIView):
 
 
 class GetTaskByIdView(GenericAPIView):
-
+    """
+    Task by Id
+    """
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ReadOnlyTasksSerializer
     queryset = Task.objects.all()
@@ -48,7 +54,9 @@ class GetTaskByIdView(GenericAPIView):
 
 
 class SetTaskAsCompleteView(GenericAPIView):
-
+    """
+    Set task by Id as completed
+    """
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ReadOnlyTasksSerializer
     queryset = Task.objects.all()
@@ -66,7 +74,9 @@ class SetTaskAsCompleteView(GenericAPIView):
 
 
 class DeleteTaskView(GenericAPIView):
-
+    """
+    Delete task by Id
+    """
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = WriteOnlyTasksSerializer
     queryset = Task.objects.all()

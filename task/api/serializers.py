@@ -16,7 +16,7 @@ class ReadOnlyTasksSerializer(serializers.ModelSerializer):
 
 class WriteOnlyTasksSerializer(serializers.ModelSerializer):
     """
-    Serializer for post, put, delete methods
+    Serializer for post and delete methods
     """
 
     title = serializers.CharField(max_length=120, min_length=1, required=True)
